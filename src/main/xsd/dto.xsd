@@ -1,0 +1,37 @@
+<xs:schema targetNamespace="http://model.atcloud.com/dto"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:flight="http://model.atcloud.com/flight"
+	xmlns:scen="http://model.atcloud.com/scenario" xmlns:dto="http://model.atcloud.com/dto"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	version="0.2" xml:lang="en" jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+	<xs:import schemaLocation="flight.xsd" namespace="http://model.atcloud.com/flight" />
+	<xs:import schemaLocation="scenario.xsd" namespace="http://model.atcloud.com/scenario" />
+
+	<!-- Elements -->
+
+	<xs:element name="Federates" type="dto:FederatesType" />
+	<xs:element name="FEMs" type="dto:FEMsType" />
+
+	<!-- FederatesType Type -->
+
+	<xs:complexType name="FederatesType">
+		<xs:sequence>
+			<xs:element name="federate" type="scen:FederateType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<!-- FEMs Type -->
+
+	<xs:complexType name="FEMsType">
+		<xs:sequence>
+			<xs:element name="fem" type="scen:FEMType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

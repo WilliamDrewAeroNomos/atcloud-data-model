@@ -1,0 +1,529 @@
+<xs:schema targetNamespace="http://model.atcloud.com/scenario"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+	xmlns:scen="http://model.atcloud.com/scenario" xmlns:cmn="http://model.atcloud.com/common-types"
+	xmlns:flight="http://model.atcloud.com/flight" xmlns:u="http://model.atcloud.com/user"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	version="0.2" xml:lang="en" jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+	<xs:import schemaLocation="flight.xsd" namespace="http://model.atcloud.com/flight" />
+	<xs:import schemaLocation="user.xsd" namespace="http://model.atcloud.com/user" />
+
+	<!-- Elements -->
+
+	<xs:element name="Simulation" type="scen:SimulationType">
+		<xs:key name="PK_Simulation_Id">
+			<xs:selector xpath="scen:SimulationType"></xs:selector>
+			<xs:field xpath="simulationID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="SimulationMetrics" type="scen:SimulationMetricsType">
+		<xs:key name="PK_SimulationMetrics_Id">
+			<xs:selector xpath="scen:SimulationMetricsType"></xs:selector>
+			<xs:field xpath="simulationMetricsID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="FEM" type="scen:FEMType">
+		<xs:key name="PK_FEM_Id">
+			<xs:selector xpath="scen:FEMType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Federate" type="scen:FederateType">
+		<xs:key name="PK_Federate_Id">
+			<xs:selector xpath="scen:FederateType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Scenario" type="scen:ScenarioType">
+		<xs:key name="PK_Scenario_Id">
+			<xs:selector xpath="scen:ScenarioType"></xs:selector>
+			<xs:field xpath="scenarioID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="FlightPlanEvent" type="scen:FlightPlanEventType">
+		<xs:key name="PK_FlightPlanEvent_Id">
+			<xs:selector xpath="scen:FlightPlanEventType"></xs:selector>
+			<xs:field xpath="eventID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="AirFlightPositionEvent" type="scen:AirFlightPositionEventType">
+		<xs:key name="PK_AirFlightPositionEvent_Id">
+			<xs:selector xpath="scen:AirFlightPositionEventType"></xs:selector>
+			<xs:field xpath="eventID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="WeatherEvent" type="scen:WeatherEventType">
+		<xs:key name="PK_WeatherEvent_Id">
+			<xs:selector xpath="scen:WeatherEventType"></xs:selector>
+			<xs:field xpath="eventID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="SimulationEvent" type="scen:SimulationEventType">
+		<xs:key name="PK_SimulationEvent_Id">
+			<xs:selector xpath="scen:SimulationEventType"></xs:selector>
+			<xs:field xpath="eventID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="LicenseUsage" type="scen:LicenseUsageType">
+		<xs:key name="PK_LicenseUsage_Id">
+			<xs:selector xpath="scen:LicenseUsageType"></xs:selector>
+			<xs:field xpath="licenseID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Associations -->
+
+	<!-- Simulation to Scenario Association -->
+
+	<xs:element name="SimulationScenarioAssoc" type="scen:SimulationScenarioAssocType">
+		<xs:key
+			name="PK_SimulationExecutionInstance_ScenarioAssoc_simulationID_scenarioID">
+			<xs:selector xpath="scen:SimulationScenarioAssocType" />
+			<xs:field xpath="simulationID" />
+			<xs:field xpath="scenarioID" />
+		</xs:key>
+		<xs:keyref name="FK_Scenario_Simulation" refer="scen:PK_Scenario_Id">
+			<xs:selector xpath="scen:Scenario" />
+			<xs:field xpath="scenarioID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Simulation to SimulationMetrics Association -->
+
+	<xs:element name="SimulationSimMetricsAssoc" type="scen:SimulationSimMetricsAssocType">
+		<xs:key name="PK_SimulationInstance_SimMetrics_simulationID_simMetricsID">
+			<xs:selector xpath="scen:SimulationSimMetricsAssocType" />
+			<xs:field xpath="simulationID" />
+			<xs:field xpath="simMetricsID" />
+		</xs:key>
+		<xs:keyref name="FK_Simulation_SimMetrics" refer="scen:PK_SimulationMetrics_Id">
+			<xs:selector xpath="scen:SimulationMetrics" />
+			<xs:field xpath="simulationMetricsID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Scenario to FlightPlan Association -->
+
+	<xs:element name="ScenarioFlightPlanAssoc" type="scen:ScenarioFlightPlanAssocType">
+		<xs:key name="PK_Scenario_FlightPlanAssoc_scenarioID_flightPlanID">
+			<xs:selector xpath="scen:ScenarioFlightPlanAssocType" />
+			<xs:field xpath="scenarioID" />
+			<xs:field xpath="flightPlanID" />
+		</xs:key>
+		<xs:keyref name="FK_Scenario_FlightPlan" refer="scen:PK_Scenario_Id">
+			<xs:selector xpath="scen:Scenario" />
+			<xs:field xpath="scenarioID" />
+		</xs:keyref>
+		<xs:keyref name="FK_FlightPlan_Scenario" refer="flight:PK_Flight_Plan_Id">
+			<xs:selector xpath="flight:FlightPlan" />
+			<xs:field xpath="flightPlanID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Simulation to SimulationData Association -->
+
+	<xs:element name="SimulationSimulationDataAssoc" type="scen:SimulationSimulationDataAssocType">
+		<xs:key name="PK_Simulation_SimulationEventAssoc_scenarioID_dataID">
+			<xs:selector xpath="scen:SimulationSimulationDataAssocType" />
+			<xs:field xpath="simulationID" />
+			<xs:field xpath="dataID" />
+		</xs:key>
+	</xs:element>
+
+	<!-- User to Simulation Association -->
+
+	<xs:element name="UserSimulationAssoc" type="scen:UserSimulationAssocType">
+		<xs:key name="PK_User_SimulationAssoc_userID_simulationID">
+			<xs:selector xpath="scen:UserSimulationAssocType" />
+			<xs:field xpath="simulationID" />
+			<xs:field xpath="userID" />
+		</xs:key>
+		<xs:keyref name="FK_User_Simulation" refer="u:PK_User_user_id">
+			<xs:selector xpath="u:User" />
+			<xs:field xpath="user_id" />
+		</xs:keyref>
+		<xs:keyref name="FK_Simulation_User" refer="scen:PK_Simulation_Id">
+			<xs:selector xpath="scen:Simulation" />
+			<xs:field xpath="simulationID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- User to FEM Association -->
+
+	<xs:element name="UserFEMAssoc" type="scen:UserFEMAssocType">
+		<xs:key name="PK_User_FEMAssoc_userID_name">
+			<xs:selector xpath="scen:UserFEMAssocType" />
+			<xs:field xpath="userID" />
+			<xs:field xpath="femName" />
+		</xs:key>
+		<xs:keyref name="FK_User_FEM" refer="u:PK_User_user_id">
+			<xs:selector xpath="u:User" />
+			<xs:field xpath="user_id" />
+		</xs:keyref>
+		<xs:keyref name="FK_FEM_User" refer="scen:PK_FEM_Id">
+			<xs:selector xpath="scen:FEM" />
+			<xs:field xpath="name"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Federate to FEM Association -->
+
+	<xs:element name="FederateFEMAssoc" type="scen:FederateFEMAssocType">
+		<xs:key name="PK_FederateFEMAssoc_name_name">
+			<xs:selector xpath="scen:FederateFEMAssocType" />
+			<xs:field xpath="federateName" />
+			<xs:field xpath="femName" />
+		</xs:key>
+		<xs:keyref name="FK_Federate_FEM" refer="scen:PK_Federate_Id">
+			<xs:selector xpath="scen:Federate" />
+			<xs:field xpath="name" />
+		</xs:keyref>
+		<xs:keyref name="FK_FEM_Federate" refer="scen:PK_FEM_Id">
+			<xs:selector xpath="scen:FEM" />
+			<xs:field xpath="name"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Group to FEM Association -->
+
+	<xs:element name="GroupFEMAssoc" type="scen:GroupFEMAssocType">
+		<xs:key name="PK_Group_FEMAssoc_name_name">
+			<xs:selector xpath="scen:GroupFEMAssocType" />
+			<xs:field xpath="groupName" />
+			<xs:field xpath="femName" />
+		</xs:key>
+		<xs:keyref name="FK_Group_FEM" refer="u:PK_Group_name">
+			<xs:selector xpath="u:Group" />
+			<xs:field xpath="name" />
+		</xs:keyref>
+		<xs:keyref name="FK_FEM_Group" refer="scen:PK_FEM_Id">
+			<xs:selector xpath="scen:FEM" />
+			<xs:field xpath="femName"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Federate to Group Association -->
+
+	<xs:element name="FederateGroupAssoc" type="scen:FederateGroupAssocType">
+		<xs:key name="PK_FedGroupAssoc_federateName_name">
+			<xs:selector xpath="scen:FederateGroupAssocType" />
+			<xs:field xpath="federateName" />
+			<xs:field xpath="groupName" />
+		</xs:key>
+		<xs:keyref name="FK_Federates_Groups" refer="scen:PK_Federate_Id">
+			<xs:selector xpath="scen:FederateType" />
+			<xs:field xpath="name" />
+		</xs:keyref>
+		<xs:keyref name="FK_Groups_Federates" refer="u:PK_Group_name">
+			<xs:selector xpath="u:Group" />
+			<xs:field xpath="name"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Association Types -->
+
+	<xs:complexType name="ScenarioFlightPlanAssocType">
+		<xs:sequence>
+			<xs:element name="scenarioID" type="cmn:UUID" />
+			<xs:element name="flightPlanID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SimulationSimMetricsAssocType">
+		<xs:sequence>
+			<xs:element name="simulationID" type="cmn:UUID" />
+			<xs:element name="simulationMetricsID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SimulationSimulationDataAssocType">
+		<xs:sequence>
+			<xs:element name="simulationID" type="cmn:UUID" />
+			<xs:element name="dataID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SimulationScenarioAssocType">
+		<xs:sequence>
+			<xs:element name="simulationID" type="cmn:UUID" />
+			<xs:element name="scenarioID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserSimulationAssocType">
+		<xs:sequence>
+			<xs:element name="simulationID" type="cmn:UUID" />
+			<xs:element name="userID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserFEMAssocType">
+		<xs:sequence>
+			<xs:element name="userID" type="cmn:UUID" />
+			<xs:element name="femName" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FederateFEMAssocType">
+		<xs:sequence>
+			<xs:element name="federateName" type="xs:string" />
+			<xs:element name="femName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GroupFEMAssocType">
+		<xs:sequence>
+			<xs:element name="groupName" type="xs:string" />
+			<xs:element name="femName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FederateGroupAssocType">
+		<xs:sequence>
+			<xs:element name="federateName" type="cmn:UUID" />
+			<xs:element name="groupName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Types -->
+
+	<!-- Scenario Type -->
+
+	<xs:complexType name="ScenarioType">
+		<xs:sequence>
+			<xs:element name="scenarioID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Simulation Type -->
+
+	<xs:complexType name="SimulationType">
+		<xs:sequence>
+			<xs:element name="timestamp" type="xs:dateTime" nillable="false" />
+			<xs:element name="simulationID" type="cmn:UUID" />
+			<xs:element name="scenarioID" type="cmn:UUID" />
+
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="status" type="cmn:SimulationStatusEnumType" />
+
+			<!-- Time the simulation was loaded -->
+			<xs:element name="loadedTimestampMSecs" type="xs:long"
+				nillable="true" />
+
+			<!-- Time that the simulation should start -->
+			<xs:element name="plannedStartTimestampMSecs" type="xs:long" />
+
+			<!-- Planned time that the simulation should terminate which is valid 
+				only if the "continuousExecution" attribute is set to false. -->
+			<xs:element name="plannedTerminationTimestampMSecs" type="xs:long"
+				nillable="true" />
+
+			<!-- If set to true then the simulation will continue to execute until 
+				terminated by an admin, simulation owner or a system shutdown. -->
+			<xs:element name="continuousExecution" type="xs:boolean" />
+
+			<!-- If true the simulation will begin execution immediately upon loading. 
+				If false then the simulation must be started by an admin, the simulation 
+				owner or some internal or external system event. -->
+			<xs:element name="autoStart" type="xs:boolean" />
+
+			<!-- Time that simulation was actually launched or started -->
+			<xs:element name="actualStartTimestampMSecs" type="xs:long"
+				nillable="true" />
+
+			<!-- Total time that the simulation was executing which omits time spent 
+				in paused or stopped states -->
+			<xs:element name="totalTimeInExecutionTimeMSecs" type="xs:long"
+				nillable="true" />
+
+			<!-- Time that the simulation was terminated -->
+			<xs:element name="terminatedTimestampMSecs" type="xs:long"
+				nillable="true" />
+
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<!-- FEM Type -->
+
+	<xs:complexType name="FEMType">
+
+		<xs:sequence>
+			<xs:element name="femID" type="cmn:UUID" />
+			<xs:element name="name" type="xs:string" />
+
+			<xs:element name="scenarioID" type="cmn:UUID" nillable="true" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+
+			<!-- Time the simulation was loaded -->
+			<xs:element name="logicalStrtTimeMSecs" type="xs:long"
+				nillable="true" />
+
+			<!-- If true the simulation will begin execution immediately upon loading. 
+				If false then the simulation must be started by an admin, the simulation 
+				owner or some internal or external system event. -->
+			<xs:element name="autoStart" type="xs:boolean" />
+
+			<!-- Default duration for each step in the start-up protocol. If a step 
+				does not have a value specified then this value is the default. -->
+			<xs:element name="defDurStrtupPrtclMSecs" type="xs:long" />
+
+			<xs:element name="plannedStartTimeMSecs" type="xs:long" />
+			<xs:element name="federationExecutionMSecs" type="xs:long" />
+			<xs:element name="joinFederationMSecs" type="xs:long" />
+			<xs:element name="registerPublicationMSecs" type="xs:long" />
+			<xs:element name="registerSubscriptionMSecs" type="xs:long" />
+			<xs:element name="registerToRunMSecs" type="xs:long" />
+			<xs:element name="waitForStartMSecs" type="xs:long" />
+			<xs:element name="waitTimeAfterTermMSecs" type="xs:long" />
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<!-- Federate Type -->
+
+	<xs:complexType name="FederateType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- SimulationEvent Type -->
+
+	<xs:complexType name="SimulationEventType" abstract="true">
+		<xs:sequence>
+			<xs:element name="eventID" type="cmn:UUID" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- FlightPlanEvent Type -->
+
+	<xs:complexType name="FlightPlanEventType">
+		<xs:complexContent>
+			<xs:extension base="scen:SimulationEventType">
+				<xs:sequence>
+					<xs:element name="flightPlan" type="flight:FlightPlanType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- AirFlightPositionEvent Type -->
+
+	<xs:complexType name="AirFlightPositionEventType">
+		<xs:complexContent>
+			<xs:extension base="scen:SimulationEventType">
+				<xs:sequence>
+					<xs:element name="airFlightPosition" type="flight:AirFlightPositionType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- WeatherEvent Type -->
+
+	<xs:complexType name="WeatherEventType">
+		<xs:complexContent>
+			<xs:extension base="scen:SimulationEventType">
+				<xs:sequence>
+					<xs:element name="weather" type="flight:WeatherType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- LicenseUsageType Type -->
+
+	<xs:complexType name="LicenseUsageType">
+		<xs:sequence>
+			<xs:element name="licenseID" type="cmn:UUID" nillable="false" />
+			<xs:element name="participantID" type="cmn:UUID" nillable="false" />
+			<xs:element name="startTime" type="xs:dateTime" nillable="false" />
+			<xs:element name="lastUpdateTime" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="endTime" type="xs:dateTime" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- SimulationMetricsType Type -->
+
+	<xs:complexType name="SimulationMetricsType">
+		<xs:sequence>
+			<xs:element name="timestamp" type="xs:dateTime" nillable="true" />
+
+			<xs:element name="simulationMetricsID" type="cmn:UUID"
+				nillable="false" />
+
+			<xs:element name="cntAircraft" type="xs:long" nillable="false" />
+			<xs:element name="cntFlightPlan" type="xs:long" nillable="false" />
+			<xs:element name="cntFlightPosition" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="cntAircraftTaxiOut" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAircraftDeparture" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAircraftArrival" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="cntAircraftTaxiIn" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAirportConfiguration" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntWeather" type="xs:long" nillable="false" />
+
+			<xs:element name="cntVehicle" type="xs:long" nillable="false" />
+			<xs:element name="cntAircraftUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntFlightPlanUpdates" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="cntFlightPositionUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAircraftTaxiOutUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAircraftDepartureUpdates" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="cntAircraftArrivalUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAircraftTaxiInUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntAirportConfigurationUpdates" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="cntWeatherUpdates" type="xs:long"
+				nillable="false" />
+			<xs:element name="cntVehicleUpdates" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="numberOfObjectsRouted" type="xs:long"
+				nillable="false" />
+			<xs:element name="numberOfBytesRouted" type="xs:long"
+				nillable="false" />
+
+			<xs:element name="totalObjectsCreated" type="xs:long"
+				nillable="false" />
+			<xs:element name="totalObjectUpdates" type="xs:long"
+				nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

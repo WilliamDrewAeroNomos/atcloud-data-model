@@ -1,0 +1,58 @@
+<xs:schema targetNamespace="http://model.atcloud.com/configuration"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:u="http://model.atcloud.com/scenario-configuration"
+	xmlns:msg="http://model.atcloud.com/message" xmlns:cmn="http://model.atcloud.com/common-types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+
+	<xs:import schemaLocation="user.xsd"
+		namespace="http://model.atcloud.com/user" />
+
+	<!-- Elements -->
+
+	<xs:element name="ScenarioConfiguration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="uuid" type="cmn:UUID" />
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="logicalStartTimeMSecs" type="xs:long" />
+				<xs:element name="description" type="xs:string" />
+				<xs:element name="defaultDurationWithinStartupProtocolMSecs"
+					type="xs:long" default="5000" />
+				<xs:element name="durationFederationExecutionMSecs" type="xs:long"
+					default="60000" />
+			</xs:sequence>
+			<xs:attribute name="durationToWaitForJoinSimulationResponseMSecs"
+				type="xs:long" default="5000" />
+			<xs:attribute name="durationToWaitForRegisterSubscriptionResponseMSecs"
+				type="xs:long" default="5000" />
+			<xs:attribute name="durationToWaitForRegisterToRunResponseMSecs"
+				type="xs:long" default="5000" />
+			<xs:attribute name="durationToWaitForStartSimulationDirectiveMSecs"
+				type="xs:long" default="5000" />
+			<xs:attribute name="durationToWaitAfterTerminationMSecs"
+				type="xs:long" default="1" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="MessagingConfiguration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="messaging-port" type="xs:int" />
+				<xs:element name="messaging-transport" type="xs:string" />
+				<xs:element name="messaging-host" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="HeartbeatConfiguration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="interval-between-beats-msecs" type="xs:int" />
+				<xs:element name="generate-heartbeat" type="xs:boolean" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

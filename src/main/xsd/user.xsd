@@ -1,0 +1,256 @@
+<xs:schema targetNamespace="http://model.atcloud.com/user"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:u="http://model.atcloud.com/user"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.2" xml:lang="en"
+	jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+
+	<!-- Elements -->
+
+	<xs:element name="Name" type="u:NameType" />
+
+	<xs:element name="Group" type="u:GroupType">
+		<xs:key name="PK_Group_name">
+			<xs:selector xpath="u:GroupType" />
+			<xs:field xpath="name" />
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Role" type="u:RoleType">
+		<xs:key name="PK_Role_name">
+			<xs:selector xpath="u:RoleType" />
+			<xs:field xpath="name" />
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Organization" type="u:OrganizationType">
+		<xs:key name="PK_Org_org_id">
+			<xs:selector xpath="u:OrganizationType"></xs:selector>
+			<xs:field xpath="orgID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="User" type="u:UserType">
+		<xs:key name="PK_User_user_id">
+			<xs:selector xpath="u:UserType"></xs:selector>
+			<xs:field xpath="user_id"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="License" type="u:LicenseType">
+		<xs:key name="PK_License_license_id">
+			<xs:selector xpath="u:LicenseType"></xs:selector>
+			<xs:field xpath="licenseID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Participant" type="u:ParticipantType">
+		<xs:key name="PK_ParticipantID">
+			<xs:selector xpath="u:ParticipantType"></xs:selector>
+			<xs:field xpath="participantID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Associations -->
+
+	<xs:element name="UserOrgAssoc" type="u:UserOrgAssocType">
+		<xs:key name="PK_UserOrgAssoc_user_id_org_id">
+			<xs:selector xpath="u:UserOrgAssocType" />
+			<xs:field xpath="user_id" />
+			<xs:field xpath="org_id" />
+		</xs:key>
+		<xs:keyref name="FK_Users_Orgs" refer="u:PK_User_user_id">
+			<xs:selector xpath="u:UserType" />
+			<xs:field xpath="user_id" />
+		</xs:keyref>
+		<xs:keyref name="FK_Orgs_Users" refer="u:PK_Org_org_id">
+			<xs:selector xpath="u:OrganizationType" />
+			<xs:field xpath="orgID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<xs:element name="LicenseOrgAssoc" type="u:LicenseOrgAssocType">
+		<xs:key name="PK_LicenseOrgAssoc_license_id_org_id">
+			<xs:selector xpath="u:LicenseOrgAssocType" />
+			<xs:field xpath="licenseID" />
+			<xs:field xpath="orgID" />
+		</xs:key>
+		<xs:keyref name="FK_Licenses_Orgs" refer="u:PK_License_license_id">
+			<xs:selector xpath="u:LicenseType" />
+			<xs:field xpath="licenseID" />
+		</xs:keyref>
+		<xs:keyref name="FK_Orgs_Licenses" refer="u:PK_Org_org_id">
+			<xs:selector xpath="u:OrganizationType" />
+			<xs:field xpath="orgID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<xs:element name="UserRoleAssoc" type="u:UserRoleAssocType">
+		<xs:key name="PK_UserRoleAssoc_user_id_name">
+			<xs:selector xpath="u:UserRoleAssoc" />
+			<xs:field xpath="user_id" />
+			<xs:field xpath="name" />
+		</xs:key>
+		<xs:keyref name="FK_Users_Roles" refer="u:PK_User_user_id">
+			<xs:selector xpath="u:User" />
+			<xs:field xpath="user_id" />
+		</xs:keyref>
+		<xs:keyref name="FK_Roles_Users" refer="u:PK_Role_name">
+			<xs:selector xpath="u:Role" />
+			<xs:field xpath="name"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<xs:element name="UserGroupAssoc" type="u:UserGroupAssocType">
+		<xs:key name="PK_UserGroupAssoc_user_id_name">
+			<xs:selector xpath="u:UserGroupAssoc" />
+			<xs:field xpath="user_id" />
+			<xs:field xpath="name" />
+		</xs:key>
+		<xs:keyref name="FK_Users_Groups" refer="u:PK_User_user_id">
+			<xs:selector xpath="u:User" />
+			<xs:field xpath="user_id" />
+		</xs:keyref>
+		<xs:keyref name="FK_Groups_Users" refer="u:PK_Group_name">
+			<xs:selector xpath="u:Group" />
+			<xs:field xpath="name"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Association Types -->
+
+	<xs:complexType name="UserOrgAssocType">
+		<xs:sequence>
+			<xs:element name="user_id" type="cmn:UUID" />
+			<xs:element name="org_id" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserRoleAssocType">
+		<xs:sequence>
+			<xs:element name="user_id" type="cmn:UUID" />
+			<xs:element name="name" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserGroupAssocType">
+		<xs:sequence>
+			<xs:element name="user_id" type="cmn:UUID" />
+			<xs:element name="name" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="LicenseOrgAssocType">
+		<xs:sequence>
+			<xs:element name="licenseID" type="cmn:UUID" />
+			<xs:element name="orgID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Types -->
+
+	<xs:complexType name="NameType">
+		<xs:sequence>
+			<xs:element name="first" type="xs:string" nillable="false" />
+			<xs:element name="middle" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+			<xs:element name="last" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="RoleType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="date" type="xs:dateTime" />
+			<xs:element name="description" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GroupType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="date" type="xs:dateTime" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="activeFEMName" type="xs:string"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserType">
+		<xs:sequence>
+			<xs:element name="user_id" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="u:NameType" nillable="false" />
+			<xs:element name="date-created" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="date-activated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="date-deactivated" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ParticipantType">
+		<xs:sequence>
+			<xs:element name="participantID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="u:NameType" nillable="false" />
+			<xs:element name="startTime" type="xs:dateTime" nillable="false" />
+			<xs:element name="endTime" type="xs:dateTime" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="OrganizationType">
+		<xs:sequence>
+			<xs:element name="orgID" type="cmn:UUID" nillable="false" />
+			<xs:element name="orgName" type="xs:string" nillable="false" />
+			<xs:element name="address" type="u:USAddressType"
+				nillable="false" />
+			<xs:element name="officePhoneNumber" type="xs:string"
+				nillable="false" />
+			<xs:element name="cellPhoneNumber" type="xs:string"
+				nillable="true" />
+			<xs:element name="email" type="xs:string" nillable="false" />
+			<xs:element name="dateCreated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="dateActivated" type="xs:dateTime"
+				nillable="true" />
+			<xs:element name="dateDeactivated" type="xs:dateTime"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="USAddressType">
+		<xs:sequence>
+			<xs:element name="houseNumber" type="xs:string" />
+			<xs:element name="street1" type="xs:string" />
+			<xs:element name="street2" type="xs:string" nillable="true" />
+			<xs:element name="unit" type="xs:string" nillable="true" />
+			<xs:element name="city" type="xs:string" />
+			<xs:element name="state" type="xs:string" />
+			<xs:element name="zip" type="xs:decimal" />
+		</xs:sequence>
+		<xs:attribute name="country" type="xs:NMTOKEN" fixed="US" />
+	</xs:complexType>
+
+	<xs:complexType name="LicenseType">
+		<xs:sequence>
+			<xs:element name="licenseID" type="cmn:UUID" nillable="false" />
+			<xs:element name="dateCreated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="dateActivated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="dateDeactivated" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="lastRenewalDate" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="inUse" type="xs:boolean" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

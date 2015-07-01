@@ -1,0 +1,112 @@
+<xs:schema targetNamespace="http://model.atcloud.com/airspace"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:as="http://model.atcloud.com/airspace"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.2" xml:lang="en"
+	jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+
+	<!-- Elements -->
+
+	<xs:element name="AirspaceConfig" type="as:AirspaceConfigType">
+		<xs:key name="PK_AirspaceConfig_airspaceConfigurationID">
+			<xs:selector xpath="as:AirspaceConfigType"></xs:selector>
+			<xs:field xpath="airspaceConfigurationID"></xs:field>
+		</xs:key>
+		<xs:key name="PK_AirspaceConfig_name">
+			<xs:selector xpath="as:AirspaceConfigType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Sector" type="as:SectorType">
+		<xs:key name="PK_Sector_sectorID">
+			<xs:selector xpath="as:SectorType"></xs:selector>
+			<xs:field xpath="sectorID"></xs:field>
+		</xs:key>
+		<xs:key name="PK_Sector_name">
+			<xs:selector xpath="as:SectorType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Associations -->
+
+	<!-- AirspaceConfig to Sector Association -->
+
+	<xs:element name="AirspaceConfigSectorAssoc" type="as:AirspaceConfigSectorAssocType">
+		<xs:key
+			name="PK_AirspaceConfigSectorAssoc_airspaceConfigurationID_sectorID">
+			<xs:selector xpath="as:AirspaceConfigSectorAssocType" />
+			<xs:field xpath="airspaceConfigurationID" />
+			<xs:field xpath="sectorID" />
+		</xs:key>
+		<xs:keyref name="FK_AirspaceConfig_Sector"
+			refer="as:PK_AirspaceConfig_airspaceConfigurationID">
+			<xs:selector xpath="as:AirspaceConfig" />
+			<xs:field xpath="airspaceConfigurationID" />
+		</xs:keyref>
+		<xs:keyref name="FK_Sector_AirspaceConfig" refer="as:PK_Sector_sectorID">
+			<xs:selector xpath="as:Sector" />
+			<xs:field xpath="sectorID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Sector to GeoSpatialLocation Association -->
+
+	<xs:element name="SectorGeoSpatialLocationAssoc" type="as:SectorGeoSpatialLocationAssocType">
+		<xs:key name="PK_SectorGeoSpatialLocationAssoc_sectorID_locationID">
+			<xs:selector xpath="as:SectorGeoSpatialLocationAssocType" />
+			<xs:field xpath="sectorID" />
+			<xs:field xpath="locationID" />
+		</xs:key>
+		<xs:keyref name="FK_Sector_GeoSpatialLocation" refer="as:PK_Sector_sectorID">
+			<xs:selector xpath="as:Sector" />
+			<xs:field xpath="sectorID" />
+		</xs:keyref>
+		<xs:keyref name="FK_GeoSpatialLocation_Sector" refer="cmn:PK_GeoSpatialLocation_Id">
+			<xs:selector xpath="cmn:GeoSpatialLocation" />
+			<xs:field xpath="locationID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Association Types -->
+
+	<xs:complexType name="AirspaceConfigSectorAssocType">
+		<xs:sequence>
+			<xs:element name="airspaceConfigurationID" type="cmn:UUID" />
+			<xs:element name="sectorID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SectorGeoSpatialLocationAssocType">
+		<xs:sequence>
+			<xs:element name="sectorID" type="cmn:UUID" />
+			<xs:element name="locationID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- AirspaceConfigType -->
+
+	<xs:complexType name="AirspaceConfigType">
+		<xs:sequence>
+			<xs:element name="airspaceConfigurationID" type="cmn:UUID"
+				nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="timestampMSecs" type="xs:long" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- SectorType -->
+
+	<xs:complexType name="SectorType">
+		<xs:sequence>
+			<xs:element name="sectorID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

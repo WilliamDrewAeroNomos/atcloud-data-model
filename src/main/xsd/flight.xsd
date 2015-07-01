@@ -1,0 +1,290 @@
+<xs:schema targetNamespace="http://model.atcloud.com/flight"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:flight="http://model.atcloud.com/flight"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.2" xml:lang="en"
+	jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+
+	<!-- Elements -->
+
+	<xs:element name="FlightPlan" type="flight:FlightPlanType">
+		<xs:key name="PK_Flight_Plan_Id">
+			<xs:selector xpath="flight:FlightPlanType"></xs:selector>
+			<xs:field xpath="flightPlanID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Aircraft" type="flight:AircraftType">
+		<xs:key name="PK_Aircraft_Id">
+			<xs:selector xpath="flight:AircraftType"></xs:selector>
+			<xs:field xpath="aircraftID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Weather" type="flight:WeatherType">
+		<xs:key name="PK_Weather_Name">
+			<xs:selector xpath="flight:WeatherType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="FlightRoute" type="flight:FlightRouteType">
+		<xs:key name="PK_FlightRoute_Id">
+			<xs:selector xpath="flight:FlightRouteType"></xs:selector>
+			<xs:field xpath="flightRouteID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="FlightProcedure" type="flight:FlightProcedureType">
+		<xs:key name="PK_FlightProcedure_Id">
+			<xs:selector xpath="flight:FlightProcedureType"></xs:selector>
+			<xs:field xpath="flightProcedureID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="AirFlightPosition" type="flight:AirFlightPositionType">
+		<xs:key name="PK_AirFlightPosition_Id">
+			<xs:selector xpath="flight:AirFlightPositionType"></xs:selector>
+			<xs:field xpath="flightPositionID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Associations -->
+
+	<!-- FlightPlan to Aircraft Association -->
+
+	<xs:element name="FlightPlanAircraftAssoc" type="flight:FlightPlanAircraftAssocType">
+		<xs:key name="PK_FlightPlanAircraftAssoc_flightPlanID_aircraftID">
+			<xs:selector xpath="flight:FlightPlanAircraftAssocType" />
+			<xs:field xpath="flightPlanID" />
+			<xs:field xpath="aircraftID" />
+		</xs:key>
+		<xs:keyref name="FK_FlightPlan_Aircraft" refer="flight:PK_Flight_Plan_Id">
+			<xs:selector xpath="flight:FlightPlan" />
+			<xs:field xpath="flightPlanID" />
+		</xs:keyref>
+		<xs:keyref name="FK_Aircraft_FlightPlan" refer="flight:PK_Aircraft_Id">
+			<xs:selector xpath="flight:Aircraft" />
+			<xs:field xpath="aircraftID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- FlightRoute to FlightProcedure Association -->
+
+	<xs:element name="FlghtRteFlghtProcAssoc" type="flight:FlghtRteFlghtProcAssocType">
+		<xs:key
+			name="PK_FlightRouteFlightProcedureAssoc_flightRouteID_flightProcedureID">
+			<xs:selector xpath="flight:FlightRouteFlightProcedureAssocType" />
+			<xs:field xpath="flightRouteID" />
+			<xs:field xpath="flightProcedureID" />
+		</xs:key>
+		<xs:keyref name="FK_FlightRoute_FlightProcedure" refer="flight:PK_FlightRoute_Id">
+			<xs:selector xpath="flight:FlightRoute" />
+			<xs:field xpath="flightRouteID" />
+		</xs:keyref>
+		<xs:keyref name="FK_FlightProcedure_FlightRoute" refer="flight:PK_FlightProcedure_Id">
+			<xs:selector xpath="flight:FlightProcedure" />
+			<xs:field xpath="flightProcedureID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- FlightRoute to NavAid Association -->
+
+	<xs:element name="FlightRouteNavAidAssoc" type="flight:FlightRouteNavAidAssocType">
+		<xs:key name="PK_FlightRouteNavAidAssoc_flightRouteID_navAidID">
+			<xs:selector xpath="flight:FlightRouteNavAidAssocType" />
+			<xs:field xpath="flightRouteID" />
+			<xs:field xpath="navAidID" />
+		</xs:key>
+		<xs:keyref name="FK_FlightRoute_NavAid" refer="flight:PK_FlightRoute_Id">
+			<xs:selector xpath="flight:FlightRoute" />
+			<xs:field xpath="flightRouteID" />
+		</xs:keyref>
+		<xs:keyref name="FK_NavAid_FlightRoute" refer="cmn:PK_NavAid_Id">
+			<xs:selector xpath="cmn:NavAid" />
+			<xs:field xpath="navAidID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Association Types -->
+
+	<xs:complexType name="FlightPlanAircraftAssocType">
+		<xs:sequence>
+			<xs:element name="flightPlanID" type="cmn:UUID" />
+			<xs:element name="aircraftID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FlghtRteFlghtProcAssocType">
+		<xs:sequence>
+			<xs:element name="flightRouteID" type="cmn:UUID" />
+			<xs:element name="flightProcedureID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FlightRouteNavAidAssocType">
+		<xs:sequence>
+			<xs:element name="flightRouteID" type="cmn:UUID" />
+			<xs:element name="navAidID" type="cmn:UUID" />
+			<xs:element name="index" type="xs:integer" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Flight Plan Type -->
+
+	<xs:complexType name="FlightPlanType">
+		<xs:sequence>
+			<xs:element name="flightPlanID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="aircraftType" type="flight:AircraftType"
+				nillable="false" />
+			<xs:element name="flightPlanStatus" type="cmn:FlightPlanStatusEnumType"
+				nillable="false" />
+			<xs:element name="dateCreated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="dateActivated" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="dateDeactivated" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="cruiseSpeedKts" type="xs:double" />
+			<xs:element name="cruiseAltitudeFt" type="xs:double" />
+			<xs:element name="route" type="flight:FlightRouteType"
+				nillable="false" />
+			<xs:element name="departureAirportCode" type="xs:string"
+				nillable="false" />
+			<xs:element name="arrivalAirportCode" type="xs:string"
+				nillable="false" />
+			<xs:element name="plannedDepartureTimeMSecs" type="xs:long"
+				nillable="false" />
+			<xs:element name="plannedDepartureRunway" type="xs:string" />
+			<xs:element name="plannedTaxiOutGate" type="xs:string" />
+			<xs:element name="departureFix" type="xs:string" />
+			<xs:element name="plannedArrivalTimeMSecs" type="xs:long" />
+			<xs:element name="plannedArrivalRunway" type="xs:string" />
+			<xs:element name="plannedTaxiInGate" type="xs:string" />
+			<xs:element name="physicalAircraftClass" type="xs:string" />
+			<xs:element name="weightAircraftClass" type="xs:string" />
+			<xs:element name="userAircraftClass" type="xs:string" />
+			<xs:element name="numOfAircraft" type="xs:integer" />
+			<xs:element name="airborneEquipmentQualifier" type="xs:string"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Aircraft Type -->
+
+	<xs:complexType name="AircraftType">
+		<xs:sequence>
+			<xs:element name="aircraftID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="dateCreated" type="xs:dateTime"
+				nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="false" />
+			<xs:element name="stdClimbRate" type="xs:long" nillable="false" />
+			<xs:element name="maxClimbRate" type="xs:long" nillable="false" />
+			<xs:element name="stdClimbSpeedKts" type="xs:long"
+				nillable="false" />
+			<xs:element name="maxClimbSpeedKts" type="xs:long"
+				nillable="false" />
+			<xs:element name="stdCruiseSpeedKts" type="xs:long"
+				nillable="false" />
+			<xs:element name="maxCruiseSpeedKts" type="xs:long"
+				nillable="false" />
+			<xs:element name="ceilingFt" type="xs:long" nillable="false" />
+			<xs:element name="maxRangeMiles" type="xs:long" nillable="false" />
+			<xs:element name="stdRangeMiles" type="xs:long" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Weather Type -->
+
+	<xs:complexType name="WeatherType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="startingTimeMSecs" type="xs:long"
+				nillable="false" />
+			<xs:element name="durationMSecs" type="xs:long" nillable="false" />
+			<xs:element name="intensity" type="xs:long" nillable="false" />
+			<xs:element name="tempatureCelsius" type="xs:long"
+				nillable="true" />
+			<xs:element name="dewPtCelsius" type="xs:long" nillable="true" />
+			<xs:element name="windSpeedKts" type="xs:long" nillable="true" />
+			<xs:element name="altimeterReading" type="xs:long"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Airway Type -->
+
+	<xs:complexType name="AirwayType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- FlightRoute Type -->
+
+	<xs:complexType name="FlightRouteType">
+		<xs:sequence>
+			<xs:element name="flightRouteID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- FlightProcedure Type -->
+
+	<xs:complexType name="FlightProcedureType">
+		<xs:sequence>
+			<xs:element name="flightProcedureID" type="cmn:UUID"
+				nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="procedure" type="xs:string" nillable="true" />
+			<xs:element name="type" type="cmn:FlightProcedureEnumType"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- AirFlightPosition Type -->
+
+	<xs:complexType name="AirFlightPositionType">
+		<xs:sequence>
+			<xs:element name="timestamp" type="xs:dateTime" nillable="false" />
+			<xs:element name="flightPositionID" type="cmn:UUID"
+				nillable="false" />
+
+			<xs:element name="latitudeDegrees" type="xs:double" />
+			<xs:element name="longitudeDegrees" type="xs:double" />
+			<xs:element name="altitudeFt" type="xs:double" />
+
+			<xs:element name="groundspeedKts" type="xs:double" />
+			<xs:element name="headingDegrees" type="xs:double" />
+			<xs:element name="airspeedKts" type="xs:double" />
+
+			<xs:element name="pitchDegrees" type="xs:double" />
+			<xs:element name="rollDegrees" type="xs:double" />
+			<xs:element name="yawDegrees" type="xs:double" />
+
+			<xs:element name="sector" type="xs:string" nillable="true" />
+			<xs:element name="center" type="xs:string" nillable="true" />
+			<xs:element name="verticalspeedKts" type="xs:double" />
+
+			<xs:element name="aircraftOnGround" type="xs:boolean"
+				nillable="true" />
+			<xs:element name="aircraftTransmissionFrequency" type="xs:int"
+				nillable="true" />
+			<xs:element name="squawkCode" type="xs:string" nillable="true" />
+
+			<xs:element name="ident" type="xs:boolean" nillable="true" />
+
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

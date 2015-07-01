@@ -1,0 +1,7 @@
+
+use test;
+
+DROP TABLE IF EXISTS FEMS;
+DROP TABLE IF EXISTS FEDERATES;
+
+commit;

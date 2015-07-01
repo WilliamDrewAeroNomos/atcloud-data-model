@@ -1,0 +1,302 @@
+<xs:schema targetNamespace="http://model.atcloud.com/airport"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:ap="http://model.atcloud.com/airport"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.2" xml:lang="en"
+	jaxb:version="2.0">
+
+	<xs:import schemaLocation="common-types.xsd"
+		namespace="http://model.atcloud.com/common-types" />
+
+	<!-- Elements -->
+
+	<xs:element name="Airport" type="ap:AirportType">
+		<xs:key name="PK_Airport_Id">
+			<xs:selector xpath="ap:AirportType"></xs:selector>
+			<xs:field xpath="airportID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Runway" type="ap:RunwayType">
+		<xs:key name="PK_Runway_Id">
+			<xs:selector xpath="ap:RunwayType"></xs:selector>
+			<xs:field xpath="runwayID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="Taxiway" type="ap:TaxiwayType">
+		<xs:key name="PK_Taxiway_Id">
+			<xs:selector xpath="ap:TaxiwayType"></xs:selector>
+			<xs:field xpath="taxiwayID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="ParkingSpot" type="ap:ParkingSpotType">
+		<xs:key name="PK_ParkingSpot_Id">
+			<xs:selector xpath="ap:ParkingSpotType"></xs:selector>
+			<xs:field xpath="parkingSpotID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="SurfaceArea" type="ap:SurfaceAreaType">
+		<xs:key name="PK_SurfaceAreaId">
+			<xs:selector xpath="ap:SurfaceAreaType"></xs:selector>
+			<xs:field xpath="surfaceAreaID"></xs:field>
+		</xs:key>
+		<xs:key name="PK_SurfaceAreaName">
+			<xs:selector xpath="ap:SurfaceAreaType"></xs:selector>
+			<xs:field xpath="name"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="GroundRoute" type="ap:GroundRouteType">
+		<xs:key name="PK_GroundRoute_Id">
+			<xs:selector xpath="ap:GroundRouteType"></xs:selector>
+			<xs:field xpath="groundRouteID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Associations -->
+
+	<!-- Airport to Runway Association -->
+
+	<xs:element name="AirportRunwayAssoc" type="ap:AirportRunwayAssocType">
+		<xs:key name="PK_AirportRunwayAssocType_airportID_runwayID">
+			<xs:selector xpath="ap:AirportRunwayAssocType" />
+			<xs:field xpath="airportID" />
+			<xs:field xpath="runwayID" />
+		</xs:key>
+		<xs:keyref name="FK_Airport_Runway" refer="ap:PK_Airport_Id">
+			<xs:selector xpath="ap:Airport" />
+			<xs:field xpath="airportID" />
+		</xs:keyref>
+		<xs:keyref name="FK_Runway_Airport" refer="ap:PK_Runway_Id">
+			<xs:selector xpath="ap:Runway" />
+			<xs:field xpath="runwayID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Airport to Taxiway Association -->
+
+	<xs:element name="AirportTaxiwayAssoc" type="ap:AirportTaxiwayAssocType">
+		<xs:key name="PK_AirportTaxiwayAssocType_airportID_taxiwayID">
+			<xs:selector xpath="ap:AirportTaxiwayAssocType" />
+			<xs:field xpath="airportID" />
+			<xs:field xpath="taxiwayID" />
+		</xs:key>
+		<xs:keyref name="FK_Airport_Taxiway" refer="ap:PK_Airport_Id">
+			<xs:selector xpath="ap:Airport" />
+			<xs:field xpath="airportID" />
+		</xs:keyref>
+		<xs:keyref name="FK_Taxiway_Airport" refer="ap:PK_Taxiway_Id">
+			<xs:selector xpath="ap:Taxiway" />
+			<xs:field xpath="taxiwayID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Airport to ParkingSpot Association -->
+
+	<xs:element name="AirportParkingSpotAssoc" type="ap:AirportParkingSpotAssocType">
+		<xs:key name="PK_AirportParkingSpotAssocType_airportID_parkingSpotID">
+			<xs:selector xpath="ap:AirportTaxiwayAssocType" />
+			<xs:field xpath="airportID" />
+			<xs:field xpath="parkingSpotID" />
+		</xs:key>
+		<xs:keyref name="FK_Airport_ParkingSpot" refer="ap:PK_Airport_Id">
+			<xs:selector xpath="ap:Airport" />
+			<xs:field xpath="airportID" />
+		</xs:keyref>
+		<xs:keyref name="FK_ParkingSpot_Airport" refer="ap:PK_ParkingSpot_Id">
+			<xs:selector xpath="ap:ParkingSpot" />
+			<xs:field xpath="parkingSpotID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Airport to SurfaceArea Association -->
+
+	<xs:element name="AirportSurfaceAreaAssoc" type="ap:AirportSurfaceAreaAssocType">
+		<xs:key name="PK_AirportSurfaceAreaAssocType_airportID_surfaceAreaID">
+			<xs:selector xpath="ap:AirportSurfaceAreaAssocType" />
+			<xs:field xpath="airportID" />
+			<xs:field xpath="surfaceAreaID" />
+		</xs:key>
+		<xs:keyref name="FK_Airport_SurfaceArea" refer="ap:PK_Airport_Id">
+			<xs:selector xpath="ap:Airport" />
+			<xs:field xpath="airportID" />
+		</xs:keyref>
+		<xs:keyref name="FK_SurfaceArea_Airport" refer="ap:PK_SurfaceAreaId">
+			<xs:selector xpath="ap:SurfaceArea" />
+			<xs:field xpath="surfaceAreaID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Airport to GroundRoute Association -->
+
+	<xs:element name="AirportGroundRouteAssoc" type="ap:AirportGroundRouteAssocType">
+		<xs:key name="PK_AirportGroundRouteAssocType_airportID_groundRouteID">
+			<xs:selector xpath="ap:AirportGroundRouteAssocType" />
+			<xs:field xpath="airportID" />
+			<xs:field xpath="groundRouteID" />
+		</xs:key>
+		<xs:keyref name="FK_Airport_GroundRoute" refer="ap:PK_Airport_Id">
+			<xs:selector xpath="ap:Airport" />
+			<xs:field xpath="airportID" />
+		</xs:keyref>
+		<xs:keyref name="FK_GroundRoute_Airport" refer="ap:PK_GroundRoute_Id">
+			<xs:selector xpath="ap:PK_GroundRoute" />
+			<xs:field xpath="groundRouteID"></xs:field>
+		</xs:keyref>
+	</xs:element>
+
+	<!-- Association Types -->
+
+	<!-- Airport to Runway Assoc -->
+
+	<xs:complexType name="AirportRunwayAssocType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" />
+			<xs:element name="runwayID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Airport to ParkingSpot Assoc -->
+
+	<xs:complexType name="AirportParkingSpotAssocType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" />
+			<xs:element name="parkingSpotID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Airport to Taxiway Assoc -->
+
+	<xs:complexType name="AirportTaxiwayAssocType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" />
+			<xs:element name="taxiwayID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Airport to SurfaceArea Assoc -->
+
+	<xs:complexType name="AirportSurfaceAreaAssocType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" />
+			<xs:element name="surfaceAreaID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Airport to GroundRoute Assoc -->
+
+	<xs:complexType name="AirportGroundRouteAssocType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" />
+			<xs:element name="groundRouteID" type="cmn:UUID" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Types -->
+
+	<!-- Airport Type -->
+
+	<xs:complexType name="AirportType">
+		<xs:sequence>
+			<xs:element name="airportID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="dateActivated" type="xs:dateTime"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="centerPoint" type="cmn:GeoSpatialLocationType"
+				nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Runway Type -->
+
+	<xs:complexType name="RunwayType">
+		<xs:sequence>
+			<xs:element name="runwayID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="lengthFt" type="xs:long" nillable="false" />
+			<xs:element name="widthFt" type="xs:long" nillable="false" />
+			<xs:element name="thresholdElevation" type="xs:long"
+				nillable="false" />
+			<xs:element name="thresholdLatitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="thresholdLongitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="startLatitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="startLongitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="endLatitude" type="xs:double" nillable="false" />
+			<xs:element name="endLongitude" type="xs:double" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Taxiway Type -->
+
+	<xs:complexType name="TaxiwayType">
+		<xs:sequence>
+			<xs:element name="taxiwayID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ParkingSpot Type -->
+
+	<xs:complexType name="ParkingSpotType">
+		<xs:sequence>
+			<xs:element name="parkingSpotID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="noseLatitude" type="xs:double" nillable="false" />
+			<xs:element name="noseLongitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="noseElevationFt" type="xs:long"
+				nillable="false" />
+			<xs:element name="noseHeadingDegrees" type="xs:long"
+				nillable="false" />
+			<xs:element name="pushbackEnabled" type="xs:boolean"
+				nillable="false" />
+			<xs:element name="pushbackLatitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="pushbackLongitude" type="xs:double"
+				nillable="false" />
+			<xs:element name="pushbackElevationFt" type="xs:long"
+				nillable="false" />
+			<xs:element name="pushbackHeadingDegrees" type="xs:long"
+				nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- SurfaceArea Type -->
+
+	<xs:complexType name="SurfaceAreaType">
+		<xs:sequence>
+			<xs:element name="surfaceAreaID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="points" type="cmn:GroundPointType"
+				nillable="false" minOccurs="3" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- GroundRoute Type -->
+
+	<xs:complexType name="GroundRouteType">
+		<xs:sequence>
+			<xs:element name="groundRouteID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="true" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

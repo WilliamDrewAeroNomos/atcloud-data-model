@@ -1,0 +1,199 @@
+<xs:schema targetNamespace="http://model.atcloud.com/common-types"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+	xmlns:cmn="http://model.atcloud.com/common-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.2" xml:lang="en"
+	jaxb:version="2.0" jaxb:extensionBindingPrefixes="hj">
+	<xs:annotation>
+		<xs:appinfo>
+			<hj:persistence>
+				<hj:default-generated-id name="Hjid"
+					transient="true" />
+			</hj:persistence>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- Elements -->
+
+	<xs:element name="DirectedGeoSpatialLocation" type="cmn:DirectedGeoSpatialLocationType">
+		<xs:key name="PK_DirectedGeoSpatialLocation_Id">
+			<xs:selector xpath="cmn:DirectedGeoSpatialLocationType"></xs:selector>
+			<xs:field xpath="locationID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="GeoSpatialLocation" type="cmn:GeoSpatialLocationType">
+		<xs:key name="PK_GeoSpatialLocation_Id">
+			<xs:selector xpath="cmn:GeoSpatialLocationType"></xs:selector>
+			<xs:field xpath="locationID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="GeoLocation" type="cmn:GeoLocationType">
+		<xs:key name="PK_GeoLocation_Id">
+			<xs:selector xpath="cmn:GeoLocationType"></xs:selector>
+			<xs:field xpath="locationID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="GroundPoint" type="cmn:GroundPointType">
+		<xs:key name="PK_GroundPoint_Id">
+			<xs:selector xpath="cmn:GroundPointType"></xs:selector>
+			<xs:field xpath="groundPointID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="NavAid" type="cmn:NavAidType">
+		<xs:key name="PK_NavAid_Id">
+			<xs:selector xpath="cmn:NavAidType"></xs:selector>
+			<xs:field xpath="navAidID"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="SimulationExecutionHandle" type="cmn:SimulationExecutionHandleType">
+		<xs:key name="PK_SimulationExecutionHandle_UUID">
+			<xs:selector xpath="cmn:SimulationExecutionHandleType"></xs:selector>
+			<xs:field xpath="uuid"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<xs:element name="ErrorDescription" type="cmn:ErrorDescriptionType">
+		<xs:key name="PK_ErrorDescription_Id">
+			<xs:selector xpath="cmn:ErrorDescriptionType"></xs:selector>
+			<xs:field xpath="id"></xs:field>
+		</xs:key>
+	</xs:element>
+
+	<!-- Types -->
+
+	<xs:simpleType name="UUID">
+		<xs:restriction base="xs:string">
+			<xs:length value="36" fixed="true" />
+			<xs:pattern
+				value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}">
+			</xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="SimulationExecutionHandleType">
+		<xs:sequence>
+			<xs:element name="uuid" type="cmn:UUID" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ErrorDescriptionType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:integer" nillable="true" />
+			<xs:element name="description" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="FlightPlanStatusEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACTIVE" />
+			<xs:enumeration value="CANCELLED" />
+			<xs:enumeration value="FILED" />
+			<xs:enumeration value="PENDING" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="FlightProcedureEnumType">
+		<xs:restriction base="xs:string">
+			<!-- SID (Standard Instrument Departure) -->
+			<xs:enumeration value="SID" />
+			<!-- STAR (Standard Terminal Arrival Route) -->
+			<xs:enumeration value="STAR" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="SimulationStatusEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LOADED" />
+			<xs:enumeration value="RUNNING" />
+			<xs:enumeration value="PAUSED" />
+			<xs:enumeration value="STOPPED" />
+			<xs:enumeration value="TERMINATED" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- NavAidEnumType -->
+
+	<xs:simpleType name="NavAidEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="VOR" />
+			<xs:enumeration value="BEACON" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- NavAidType -->
+
+	<xs:complexType name="NavAidType">
+		<xs:sequence>
+			<xs:element name="navAidID" type="cmn:UUID" nillable="false" />
+			<xs:element name="name" type="xs:string" nillable="false" />
+			<xs:element name="type" type="cmn:NavAidEnumType"
+				nillable="false" />
+			<xs:element name="description" type="xs:string" nillable="true" />
+			<xs:element name="active" type="xs:boolean" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- GroundPointType -->
+
+	<xs:complexType name="GroundPointType">
+		<xs:sequence>
+			<xs:element name="groundPointID" type="cmn:UUID" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+			<xs:element name="elevation" type="xs:double" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- GeoLocationType -->
+
+	<xs:complexType name="GeoLocationType">
+		<xs:sequence>
+			<xs:element name="locationID" type="cmn:UUID" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- GeoSpatialLocationType -->
+
+	<xs:complexType name="GeoSpatialLocationType">
+		<xs:sequence>
+			<xs:element name="locationID" type="cmn:UUID" nillable="false" />
+			<xs:element name="altitude" type="xs:double" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- DirectedGeoSpatialLocationType -->
+
+	<xs:complexType name="DirectedGeoSpatialLocationType">
+		<xs:sequence>
+			<xs:element name="locationID" type="cmn:UUID" nillable="false" />
+			<xs:element name="altitude" type="xs:double" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+			<xs:element name="heading" type="xs:long" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- FourDSpactialLocationType -->
+
+	<xs:complexType name="FourDSpatialLocationType">
+		<xs:sequence>
+			<xs:element name="locationID" type="cmn:UUID" nillable="false" />
+			<xs:element name="altitude" type="xs:double" nillable="false" />
+			<xs:element name="latitude" type="xs:double" nillable="false" />
+			<xs:element name="longitude" type="xs:double" nillable="false" />
+			<xs:element name="heading" type="xs:long" nillable="false" />
+			<xs:element name="timestampMSecs" type="xs:long" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
